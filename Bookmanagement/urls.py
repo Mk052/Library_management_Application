@@ -1,8 +1,9 @@
 from django.urls import path
 
-from Bookmanagement.views import Login, Signup
+from Bookmanagement.views import Login, Logout, Signup
 
 urlpatterns = [
     path("signup/", Signup.as_view()),
     path("login/", Login.as_view()),
+    path("logout/", Logout.as_view()),
 ]
