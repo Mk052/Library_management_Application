@@ -77,5 +77,27 @@ class AuthorAPIView(APIView):
         else:
             return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, pk=None):
+        if pk:
+            data = Author.objects.filter(id=pk).first()
+            serializer = AuthorSerializers(data)
+            if data:
+                return Response(
+                    {"msg": "retrieve the author", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"msg": "Author does not Exits"}, status=status.HTTP_404_NOT_FOUND
+                )
+        else:
+            data = Author.objects.all()
+            paginator = CustomPagination()
+            paginator_author = paginator.paginate_queryset(
+                data, request
+            )  # Gets a small part of the authors list based on the page number in the request.
+            serializer = AuthorSerializers(paginator_author, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 # ******************************* Author Management end ***********************
