@@ -6,7 +6,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from Bookmanagement.models import Author, Student
 from Bookmanagement.pagination import CustomPagination
-from Bookmanagement.serializers import AuthorSerializers, StudentSerializers
+from Bookmanagement.serializers import (
+    AuthorSerializers,
+    CategorySerializers,
+    StudentSerializers,
+)
 
 
 class Signup(APIView):
@@ -158,3 +162,20 @@ class AuthorAPIView(APIView):
 
 
 # ******************************* Author Management end ***********************
+# ****************************** Category Management start ********************
+class CategoryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CategorySerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"msg": "Successfully Created a category", "data": serializer.data},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ****************************** Category Management end ********************
