@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from Bookmanagement.models import Student
+from Bookmanagement.models import Student, Author
 
 
 class StudentSerializers(serializers.ModelSerializer):
@@ -9,3 +9,9 @@ class StudentSerializers(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ["id", "full_name", "email", "password", "roll_no"]
+
+
+class AuthorSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ["name", "bio"]

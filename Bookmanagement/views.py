@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from Bookmanagement.models import Student
-from Bookmanagement.serializers import StudentSerializers
+from Bookmanagement.models import Author, Student
+from Bookmanagement.pagination import CustomPagination
+from Bookmanagement.serializers import AuthorSerializers, StudentSerializers
 
 
 class Signup(APIView):
@@ -58,3 +59,23 @@ class Logout(APIView):
                 {"msg": "invalid user or other error"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+# **************************** Author Management start *******************
+
+
+class AuthorAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializers = AuthorSerializers(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(
+                {"msg": "Created the Author"}, status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ******************************* Author Management end ***********************
