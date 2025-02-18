@@ -141,5 +141,20 @@ class AuthorAPIView(APIView):
                     {"msg": "author does not exists"}, status=status.HTTP_404_NOT_FOUND
                 )
 
+    def delete(self, request, pk=None):
+        if pk:
+            id = pk
+            author = Author.objects.filter(id=id).first()
+            if author:
+                author.delete()
+                return Response(
+                    {"msg": "Successfully deleted the author"},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"msg": "author does not exist"}, status=status.HTTP_404_NOT_FOUND
+                )
+
 
 # ******************************* Author Management end ***********************
