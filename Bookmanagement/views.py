@@ -99,5 +99,47 @@ class AuthorAPIView(APIView):
             serializer = AuthorSerializers(paginator_author, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request, pk=None):
+        if pk:
+            id = pk
+            author = Author.objects.filter(id=id).first()
+            if author:
+                serializer = AuthorSerializers(author, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(
+                        {"msg": "completed data updated", "data": serializer.data},
+                        status=status.HTTP_200_OK,
+                    )
+                else:
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                return Response(
+                    {"msg": "author does not exists"}, status=status.HTTP_404_NOT_FOUND
+                )
+
+    def patch(self, request, pk=None):
+        if pk:
+            id = pk
+            author = Author.objects.filter(id=id).first()
+            if author:
+                serializer = AuthorSerializers(author, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(
+                        {"msg": "partial data updated", "data": serializer.data},
+                        status=status.HTTP_200_OK,
+                    )
+                else:
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                return Response(
+                    {"msg": "author does not exists"}, status=status.HTTP_404_NOT_FOUND
+                )
+
 
 # ******************************* Author Management end ***********************
