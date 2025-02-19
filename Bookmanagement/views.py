@@ -211,5 +211,18 @@ class CategoryAPIView(APIView):
                 {"msg": "Category does not exits"}, status=status.HTTP_404_NOT_FOUND
             )
 
+    def delete(self, request, pk=None):
+        category = Category.objects.filter(id=pk).first()
+        if category:
+            category.delete()
+            return Response(
+                {"msg": "Successfully deleted the category"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        else:
+            return Response(
+                {"msg": "category does not exits"}, status=status.HTTP_404_NOT_FOUND
+            )
+
 
 # ****************************** Category Management end ********************
