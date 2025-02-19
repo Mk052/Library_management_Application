@@ -349,3 +349,25 @@ class BookAPIView(APIView):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk=None):
+        author = request.GET.get("author")
+        category = request.GET.get("category")
+        if pk:
+            book = Book.objects.filter(id=pk).first()
+            if book:
+                serializer = BookSerializers(book)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"msg": "Book does not exit"}, status=status.HTTP_404_NOT_FOUND
+                )
+        book = Book.objects.all()
+        if author:
+            book = book.filter(author__name=author)
+        if category:
+            book = book.filter(category__name=category)
+        paginator = CustomPagination()
+        paginator_book = paginator.paginate_queryset(book, request)
+        serializer = BookSerializers(paginator_book, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
