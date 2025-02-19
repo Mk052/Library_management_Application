@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from Bookmanagement.models import Author, Category, Student
+from Bookmanagement.models import Author, Category, Course, Student
 
 
 class StudentSerializers(serializers.ModelSerializer):
@@ -21,4 +21,11 @@ class CategorySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Category
+        fields = ["name"]
+
+
+class CourseSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
         fields = ["name"]
