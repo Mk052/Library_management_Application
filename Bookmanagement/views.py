@@ -7,9 +7,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from Bookmanagement.models import Author, Book, Category, Course, Student
 from Bookmanagement.pagination import CustomPagination
 from Bookmanagement.permissions import CustomPermission
-from Bookmanagement.serializers import (AuthorSerializers, BookSerializers,
-                                        CategorySerializers, CourseSerializers,
-                                        StudentSerializers)
+from Bookmanagement.serializers import (
+    AuthorSerializers,
+    CategorySerializers,
+    CourseSerializers,
+    StudentSerializers,
+)
 
 
 class Signup(APIView):
@@ -226,3 +229,17 @@ class CategoryAPIView(APIView):
 
 
 # ****************************** Category Management end ********************
+# ****************************** Course Management start ********************
+class CourseAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CourseSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"msg": "Successfully Created a course", "data": serializer.data},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
