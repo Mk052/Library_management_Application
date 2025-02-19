@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from Bookmanagement.models import Author, Category, Student
+from Bookmanagement.models import Author, Book, Category, Course, Student
 from Bookmanagement.pagination import CustomPagination
-from Bookmanagement.serializers import (AuthorSerializers, CategorySerializers,
+from Bookmanagement.permissions import CustomPermission
+from Bookmanagement.serializers import (AuthorSerializers, BookSerializers,
+                                        CategorySerializers, CourseSerializers,
                                         StudentSerializers)
 
 
@@ -191,6 +193,23 @@ class CategoryAPIView(APIView):
             paginator_category = paginator.paginate_queryset(category, request)
             serializer = CategorySerializers(paginator_category, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk=None):
+        category = Category.objects.filter(id=pk).first()
+        if category:
+            serializer = CategorySerializers(category, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"msg": "Successfully update the data", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                {"msg": "Category does not exits"}, status=status.HTTP_404_NOT_FOUND
+            )
 
 
 # ****************************** Category Management end ********************

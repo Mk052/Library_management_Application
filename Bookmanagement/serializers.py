@@ -8,7 +8,7 @@ class StudentSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ["id", "full_name", "email", "password", "roll_no"]
+        fields = ["id", "full_name", "email", "password", "roll_no", "course"]
 
 
 class AuthorSerializers(serializers.ModelSerializer):
