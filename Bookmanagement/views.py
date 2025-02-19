@@ -391,3 +391,14 @@ class BookAPIView(APIView):
             return Response(
                 {"msg": "Book does not exits"}, status=status.HTTP_404_NOT_FOUND
             )
+
+    def delete(self, request, pk=None):
+        book = Book.objects.filter(id=pk).first()
+        if book:
+            book.delete()
+            return Response(
+                {"msg": "Successfully delete the Book"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        else:
+            return Response({"msg": "Book not found"}, status=status.HTTP_404_NOT_FOUND)
