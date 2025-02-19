@@ -260,3 +260,20 @@ class CourseAPIView(APIView):
             paginator_course = paginator.paginate_queryset(course, request)
             serializer = CourseSerializers(paginator_course, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk=None):
+        course = Course.objects.filter(id=pk).first()
+        if course:
+            serializer = CourseSerializers(course, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"msg": "Successfully update the data", "data": serializer.data},
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                {"msg": "Course does not exits"}, status=status.HTTP_404_NOT_FOUND
+            )
