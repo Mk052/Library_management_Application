@@ -277,3 +277,19 @@ class CourseAPIView(APIView):
             return Response(
                 {"msg": "Course does not exits"}, status=status.HTTP_404_NOT_FOUND
             )
+
+    def delete(self, request, pk=None):
+        course = Course.objects.filter(id=pk).first()
+        if course:
+            course.delete()
+            return Response(
+                {"msg": "Successfully deleted the course"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        else:
+            return Response(
+                {"msg": "course does not exits"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+
+# ****************************** Course Management end ********************
