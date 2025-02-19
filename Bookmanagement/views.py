@@ -243,3 +243,20 @@ class CourseAPIView(APIView):
             )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk=None):
+        if pk:
+            course = Course.objects.filter(id=pk).first()
+            if course:
+                serializer = CourseSerializers(course)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"msg": "course does not exits"}, status=status.HTTP_404_NOT_FOUND
+                )
+        else:
+            course = Course.objects.all()
+            paginator = CustomPagination()
+            paginator_course = paginator.paginate_queryset(course, request)
+            serializer = CourseSerializers(paginator_course, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
