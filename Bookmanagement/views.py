@@ -371,3 +371,23 @@ class BookAPIView(APIView):
         paginator_book = paginator.paginate_queryset(book, request)
         serializer = BookSerializers(paginator_book, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk=None):
+        book = Book.objects.filter(id=pk).first()
+        if book:
+            serializer = BookSerializers(book, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {
+                        "msg": "Successfully update the Book data",
+                        "data": serializer.data,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                {"msg": "Book does not exits"}, status=status.HTTP_404_NOT_FOUND
+            )
