@@ -7,12 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from Bookmanagement.models import Author, Book, Category, Course, Student
 from Bookmanagement.pagination import CustomPagination
 from Bookmanagement.permissions import CustomPermission
-from Bookmanagement.serializers import (
-    AuthorSerializers,
-    CategorySerializers,
-    CourseSerializers,
-    StudentSerializers,
-)
+from Bookmanagement.serializers import (AuthorSerializers, CategorySerializers,
+                                        CourseSerializers, StudentSerializers)
 
 
 class Signup(APIView):
@@ -293,3 +289,24 @@ class CourseAPIView(APIView):
 
 
 # ****************************** Course Management end ********************
+
+
+class StudentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk=None):
+        if pk:
+            student = Student.objects.filter(id=pk).first()
+            if student:
+                serializer = StudentSerializers(student)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"msg": "Student does not exits"}, status=status.HTTP_404_NOT_FOUND
+                )
+        else:
+            student = Student.objects.all()
+            paginator = CustomPagination()
+            paginator_student = paginator.paginate_queryset(student, request)
+            serializer = StudentSerializers(paginator_student, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
