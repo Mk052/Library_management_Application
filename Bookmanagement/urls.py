@@ -10,6 +10,7 @@ from Bookmanagement.views import (
     Logout,
     Signup,
     StudentAPIView,
+    ReturnBookAPIView,
 )
 
 urlpatterns = [
@@ -28,4 +29,5 @@ urlpatterns = [
     path("book/<int:pk>/", BookAPIView.as_view()),
     path("issuebook/", IssueBookAPIView.as_view()),
     path("issuebook/<int:pk>/", IssueBookAPIView.as_view()),
+    path("returnbook/<int:pk>/", ReturnBookAPIView.as_view()),
 ]

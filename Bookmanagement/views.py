@@ -418,4 +418,31 @@ class IssueBookAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ReturnBookAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, pk):
+        issue_book = IssueBook.objects.filter(id=pk).first()
+        if not issue_book:
+            return Response({"msg": "book not found"}, status=status.HTTP_404_NOT_FOUND)
+        if request.user != issue_book.student:
+            return Response(
+                {"msg": "you are not authorized to return the book"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if issue_book.is_returned:
+            return Response({"msg": "you already returned the book"})
+        issue_book.is_returned = True
+        issue_book.return_date = now()
+        issue_book.save()
+        book = issue_book.book
+        book.book_copies += 1
+        book.save()
+        serializer = IssueBookSerializer(issue_book)
+        return Response(
+            {"msg": "Successfully returned the book", "data": serializer.data},
+            status=status.HTTP_201_CREATED,
+        )
+
+
 # ****************************** IssueBook Management end ********************
