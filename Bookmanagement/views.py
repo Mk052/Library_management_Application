@@ -509,5 +509,17 @@ class FineAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+    def delete(self, request, pk=None):
+        fine = Fine.objects.filter(id=pk).first()
+        if not fine:
+            return Response(
+                {"msg": "fine does not exit"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        fine.delete()
+        return Response(
+            {"msg": "Successfully delete the fine"}, status=status.HTTP_204_NO_CONTENT
+        )
+
 
 # ****************************** Fine Management end ********************
