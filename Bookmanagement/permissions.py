@@ -18,3 +18,12 @@ class CustomPermission(permissions.BasePermission):
 
         # Write permissions are only allowed for superusers
         return request.user.is_superuser
+    
+
+# class IssueBookCustomPermission(permissions.BasePermission):
+
+#     def has_object_permission(self, request, view, obj):
+#         if request.method in permissions.SAFE_METHODS:
+#             return True   
+        
+#         return obj.student == request.user
