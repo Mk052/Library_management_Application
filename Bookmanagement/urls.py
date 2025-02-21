@@ -12,7 +12,8 @@ from Bookmanagement.views import (
     StudentAPIView,
     ReturnBookAPIView,
     FineAPIView,
-    StudentFineAPIView
+    StudentFineAPIView,
+    SearchAPIView
 )
 
 urlpatterns = [
@@ -35,4 +36,5 @@ urlpatterns = [
     path("fine/", FineAPIView.as_view()),
     path("fine/<int:pk>/", FineAPIView.as_view()),
     path("studentfine/", StudentFineAPIView.as_view()),
+    path("search/", SearchAPIView.as_view())
 ]

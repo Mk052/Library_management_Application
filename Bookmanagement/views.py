@@ -536,3 +536,27 @@ class StudentFineAPIView(APIView):
 
 
 # ****************************** Fine Management end ********************
+# ****************************** Search Management start ********************
+
+
+class SearchAPIView(APIView):
+
+    def get(self, request):
+        search_query = request.GET.get("search", None)
+        if not search_query:
+            return Response({"msg": "give the value"}, status=status.HTTP_404_NOT_FOUND)
+        book = Book.objects.filter(title__icontains=search_query)
+        author = Author.objects.filter(name__icontains=search_query)
+        category = Category.objects.filter(name__icontains=search_query)
+        # data = Book.objects.filter(Q(title__iexact=search_query) | Q(author__name__iexact=search_query) | Q(category__name__iexact=search_query))
+        # serializer = BookSerializers(data, many=True)
+        return Response(
+            {
+                "book": BookSerializer(book, many=True).data,
+                "author": AuthorSerializer(author, many=True).data,
+                "category": CategorySerializer(category, many=True).data,
+            }
+        )
+
+
+# ****************************** Search Management end ********************
