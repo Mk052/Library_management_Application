@@ -2,13 +2,14 @@ from django.urls import path
 
 from Bookmanagement.views import (
     AuthorAPIView,
+    BookAPIView,
     CategoryAPIView,
     CourseAPIView,
+    IssueBookAPIView,
     Login,
     Logout,
     Signup,
     StudentAPIView,
-    BookAPIView
 )
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path("student/<int:pk>/", StudentAPIView.as_view()),
     path("book/", BookAPIView.as_view()),
     path("book/<int:pk>/", BookAPIView.as_view()),
+    path("issuebook/", IssueBookAPIView.as_view()),
 ]
