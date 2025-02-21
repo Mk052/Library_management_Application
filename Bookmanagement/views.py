@@ -6,25 +6,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from Bookmanagement.models import (
-    Author,
-    Book,
-    Category,
-    Course,
-    Fine,
-    IssueBook,
-    Student,
-)
+from Bookmanagement.models import (Author, Book, Category, Course, Fine,
+                                   IssueBook, Student)
 from Bookmanagement.pagination import CustomPagination
 from Bookmanagement.permissions import CustomPermission
-from Bookmanagement.serializers import (
-    AuthorSerializer,
-    BookSerializer,
-    CategorySerializer,
-    CourseSerializer,
-    IssueBookSerializer,
-    StudentSerializer,
-)
+from Bookmanagement.serializers import (AuthorSerializer, BookSerializer,
+                                        CategorySerializer, CourseSerializer,
+                                        FineSerializer, IssueBookSerializer,
+                                        StudentSerializer)
 
 
 class Signup(APIView):
@@ -446,3 +435,17 @@ class ReturnBookAPIView(APIView):
 
 
 # ****************************** IssueBook Management end ********************
+# ****************************** Fine Management start ********************
+class FineAPIView(APIView):
+
+    def post(self, request):
+        serializer = FineSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"msg": "Successfully created the Fine", "data": serializer.data},
+            status=status.HTTP_201_CREATED,
+        )
+
+
+# ****************************** Fine Management end ********************
