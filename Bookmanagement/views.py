@@ -522,4 +522,17 @@ class FineAPIView(APIView):
         )
 
 
+class StudentFineAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        student = request.user
+        issue_books = IssueBook.objects.filter(student=student)
+        fine = Fine.objects.filter(issue_book__in=issue_books)
+        paginator = CustomPagination()
+        paginator_fine = paginator.paginate_queryset(fine, request)
+        serializer = FineSerializer(paginator_fine, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 # ****************************** Fine Management end ********************
