@@ -475,5 +475,39 @@ class FineAPIView(APIView):
         serializer = FineSerializer(paginator_fine, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request, pk=None):
+        fine = Fine.objects.filter(id=pk).filter()
+        if not fine:
+            return Response(
+                {"msg": "fine does not exit"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = FineSerializer(fine, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"msg": "Successfully update the data", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
+    def patch(self, request, pk=None):
+        fine = Fine.objects.filter(id=pk).filter()
+        if not fine:
+            return Response(
+                {"msg": "fine does not exit"}, status=status.HTTP_404_NOT_FOUND
+            )
+        # if request.user != fine.issue_book.student:
+        #     return Response({"msg": "you are not authorized to pay the fine"},
+        #                     status=status.HTTP_403_FORBIDDEN)
+        fine.paid = True
+        fine.save()
+        serializer = FineSerializer(fine)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
+        return Response(
+            {"msg": "Successfully partially updated the data", "data": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
 
 # ****************************** Fine Management end ********************
