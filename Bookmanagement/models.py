@@ -9,7 +9,7 @@ class TimestampedModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True
+        abstract = True  # Avoid Creating a Separate Database Table
 
 
 class Category(TimestampedModel):
@@ -30,11 +30,14 @@ class Author(TimestampedModel):
 class Book(TimestampedModel):
     title = models.CharField(max_length=100)
     Description = models.TextField(blank=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="books", blank=True
+    )
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="books"
     )
     is_avaliable = models.BooleanField(default=True)
+    total_book = models.PositiveIntegerField(default=1)
     book_copies = models.PositiveIntegerField(default=1)
 
     def __str__(self):
@@ -67,11 +70,14 @@ class Student(AbstractUser, TimestampedModel):
 class IssueBook(TimestampedModel):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="issuebook")
     student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name="issuebook"
+        Student, on_delete=models.CASCADE, related_name="issuebook", blank=True
     )
     issue_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)
     is_returned = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.book.title} Book issued to {self.student.email}"
 
 
 class Fine(TimestampedModel):
@@ -80,3 +86,6 @@ class Fine(TimestampedModel):
     )
     amount = models.PositiveIntegerField()
     paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.issue_book}"
