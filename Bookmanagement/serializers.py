@@ -1,7 +1,14 @@
 from rest_framework import serializers
 
-from Bookmanagement.models import (Author, Book, Category, Course, Fine,
-                                   IssueBook, Student)
+from Bookmanagement.models import (
+    Author,
+    Book,
+    Category,
+    Course,
+    Fine,
+    IssueBook,
+    Student,
+)
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -99,3 +106,14 @@ class IssueBookSerializer(serializers.ModelSerializer):
             "book_id",
             "student_id",
         ]
+
+
+class FineSerializer(serializers.ModelSerializer):
+    issue_book_id = serializers.PrimaryKeyRelatedField(
+        queryset=IssueBook.objects.all(), source="issue_book", write_only=True
+    )
+    issue_book = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Fine
+        fields = ["id", "issue_book", "amount", "paid", "issue_book_id"]
