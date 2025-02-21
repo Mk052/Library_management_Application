@@ -27,4 +27,5 @@ urlpatterns = [
     path("book/", BookAPIView.as_view()),
     path("book/<int:pk>/", BookAPIView.as_view()),
     path("issuebook/", IssueBookAPIView.as_view()),
+    path("issuebook/<int:pk>/", IssueBookAPIView.as_view()),
 ]
