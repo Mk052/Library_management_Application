@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
-from Bookmanagement.models import Author, Book, Category, Course, Student
+from Bookmanagement.models import (Author, Book, Category, Course, Fine,
+                                   IssueBook, Student)
 
 
-class StudentSerializers(serializers.ModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     course = serializers.StringRelatedField(read_only=True)
     course_id = serializers.PrimaryKeyRelatedField(
@@ -27,27 +28,27 @@ class StudentSerializers(serializers.ModelSerializer):
         ]
 
 
-class AuthorSerializers(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ["name", "bio"]
 
 
-class CategorySerializers(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
         fields = ["name"]
 
 
-class CourseSerializers(serializers.ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
         fields = ["name"]
 
 
-class BookSerializers(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
     author_id = serializers.PrimaryKeyRelatedField(
         queryset=Author.objects.all(), source="author", write_only=True
     )
@@ -69,4 +70,32 @@ class BookSerializers(serializers.ModelSerializer):
             "book_copies",
             "author_id",
             "category_id",
+        ]
+
+
+class IssueBookSerializer(serializers.ModelSerializer):
+    book = serializers.StringRelatedField(read_only=True)
+    student = serializers.StringRelatedField(read_only=True)
+    book_id = serializers.PrimaryKeyRelatedField(
+        queryset=Book.objects.all(), source="book", write_only=True
+    )
+    student_id = serializers.PrimaryKeyRelatedField(
+        queryset=Student.objects.all(),
+        source="student",
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
+
+    class Meta:
+        model = IssueBook
+        fields = [
+            "id",
+            "book",
+            "student",
+            "issue_date",
+            "return_date",
+            "is_returned",
+            "book_id",
+            "student_id",
         ]
