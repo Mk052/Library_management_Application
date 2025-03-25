@@ -542,9 +542,10 @@ class StudentFineAPIView(APIView):
 class SearchAPIView(APIView):
 
     def get(self, request):
-        search_query = request.GET.get("search", None)
+        search_query = request.GET.get("search")
         if not search_query:
-            return Response({"msg": "give the value"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"msg": "give the value"},
+                            status=status.HTTP_404_NOT_FOUND)
         book = Book.objects.filter(title__icontains=search_query)
         author = Author.objects.filter(name__icontains=search_query)
         category = Category.objects.filter(name__icontains=search_query)
@@ -558,5 +559,5 @@ class SearchAPIView(APIView):
             }
         )
 
-
 # ****************************** Search Management end ********************
+

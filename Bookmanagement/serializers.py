@@ -10,7 +10,6 @@ from Bookmanagement.models import (
     Student,
 )
 
-
 class StudentSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     course = serializers.StringRelatedField(read_only=True)
